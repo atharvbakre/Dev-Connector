@@ -1,11 +1,24 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const passport = require('passport')
 
+// Routes
 const users = require('./routes/api/users')
 const profile = require('./routes/api/profile')
 const posts = require('./routes/api/posts')
 
 const app = express()
+
+// Body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+// Passport middleware
+app.use(passport.initialize())
+
+// Passport config
+require('./config/passport')(passport)
 
 // MongoDB URI
 const mongoDBURI = require('./config/keys').mongoDBURI;
@@ -16,7 +29,7 @@ mongoose
         useNewUrlParser: true,
         useUnifiedTopology: true
     })
-    .then(() => console.log('Connected!'))
+    .then(() => console.log('DataBase Connected!'))
     .catch(error => console.log(error))
 
 // Use routes
