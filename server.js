@@ -27,7 +27,8 @@ const mongoDBURI = require('./config/keys').mongoDBURI;
 mongoose   
     .connect(mongoDBURI, {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
     })
     .then(() => console.log('DataBase Connected!'))
     .catch(error => console.log(error))
