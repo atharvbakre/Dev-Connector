@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const passport = require('passport')
 const keys = require('../../config/keys')
+
+// Validations
 const registerValidations = require('../../validation/register')
 const loginValidations = require('../../validation/login')
 

@@ -1,6 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const passport = require('passport')
+
+// Validations
 const profileValidations = require('../../validation/profile')
 const experienceValidations = require('../../validation/experience')
 const educationValidations = require('../../validation/education')
@@ -13,20 +15,19 @@ const Profile = require('../../models/Profile')
 
 const router = express.Router()
 
-// @route   GET /api/profile
+// @route   GET /api/profile/
 // @desc    Get current users profile
 // @access  Private
 router.get('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
     const errors = {}
-    const profile = await (await Profile.findOne({ user: req.user.id }) 
-                    .populate('user', ['name', 'avatar']))
-                    .execPopulate()
+    const profile = await Profile.findOne({ user: req.user.id }) 
                         
     if(!profile) {
         errors.noprofile = 'Profile not available for the User'
         return res.status(404).json(errors)
     }
-
+    
+    profile.populate('user', ['name', 'avatar']).execPopulate()
     res.json(profile)
 })
 
@@ -50,15 +51,14 @@ router.get('/all', async (req, res) => {
 // @access  Public
 router.get('/handle/:handle', async (req, res) => {
     const errors = {}
-    const profile = await (await Profile.findOne({ handle: req.params.handle })
-                    .populate('user', ['name', 'avatar']))
-                    .execPopulate()
+    const profile = await Profile.findOne({ handle: req.params.handle })
 
     if(!profile) {
         errors.handle = 'Handle not found'
         return res.status(404).json(errors)
     }
 
+    profile.populate('user', ['name', 'avatar']).execPopulate()
     res.json(profile)
 })
 
@@ -79,7 +79,7 @@ router.get('/id/:id', async (req, res) => {
     res.json(profile)
 })
 
-// @route   POST /api/profile
+// @route   POST /api/profile/
 // @desc    Create or Edit current user profile
 // @access  Private
 router.post('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
@@ -245,7 +245,7 @@ router.delete('/education/:id', passport.authenticate('jwt', { session: false })
     res.json(profile)
 })
 
-// @route   DELETE /api/profile
+// @route   DELETE /api/profile/
 // @desc    Delete user and profile
 // @access  Private
 router.delete('/', passport.authenticate('jwt', { session: false }), async (req, res) => {
