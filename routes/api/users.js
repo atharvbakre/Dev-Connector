@@ -57,7 +57,7 @@ router.post("/login", async (req, res) => {
   const { errors, isValid } = loginValidations(req.body);
 
   if (!isValid) {
-    return res.json(errors);
+    return res.status(400).json(errors);
   }
 
   const email = req.body.email;
